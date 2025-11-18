@@ -150,12 +150,6 @@
 
           </div>
 
-          <router-link to="/forgot-password" class="forgot-password">
-
-            {{ $t('common.forgotPassword') }}
-
-          </router-link>
-
         </div>
 
         

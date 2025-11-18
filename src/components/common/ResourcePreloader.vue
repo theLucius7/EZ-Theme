@@ -18,59 +18,60 @@
 </template>
 
 <script>
-import { onMounted, ref, watch, computed } from 'vue';
-import { useRoute } from 'vue-router';
-import preloadManager from '@/utils/preloadManager';
-import { CUSTOMER_SERVICE_CONFIG, AUTH_LAYOUT_CONFIG } from '@/utils/baseConfig';
-
-export default {
-  name: 'ResourcePreloader',
-  setup() {
-    const route = useRoute();
-    const isPreloaded = ref({
-      components: false,
-      images: false,
-      scripts: false
-    });
-
-    const isCustomerServiceEnabled = CUSTOMER_SERVICE_CONFIG && CUSTOMER_SERVICE_CONFIG.enabled;
-
-    const preloadImages = ref([
-      '/images/logo.png'
-    ]);
-    
-    const preloadQueue = ref([]);
-    const isLoading = ref(false);
-
-    const authLayoutType = computed(() => {
-      return AUTH_LAYOUT_CONFIG?.layoutType || 'center';
-    });
-
-    const customerServiceComponent = { 
-      path: 'CustomerService', 
-      name: 'CustomerService', 
-      priority: 0, 
-      component: () => import('@/views/service/CustomerService.vue') 
-    };
-
-    const componentsConfig = {
-      base: [
-        { path: 'Dashboard', name: 'Dashboard', priority: 1, component: () => import('@/views/dashboard/Dashboard.vue') },
-        { path: 'Shop', name: 'Shop', priority: 2, component: () => import('@/views/shop/Shop.vue') },
-        { path: 'More', name: 'More', priority: 3, component: () => import('@/views/more/MoreOptions.vue') },
-        { path: 'Invite', name: 'Invite', priority: 4, component: () => import('@/views/invite/Invite.vue') },
-        { path: 'Profile', name: 'Profile', priority: 5, component: () => import('@/views/profile/UserProfile.vue') }
-      ],
-      
-      route: {
-        '/': [
-          {
-            path: 'Login',
-            name: 'Login',
-            priority: 1,
-            component: () => authLayoutType.value === 'split' 
-              ? import('@/views/auth/split/Login.vue')
-              : import('@/views/auth/center/Login.vue')
+        '/': [
+          {
+            path: 'Login',
+            name: 'Login',
+            priority: 1,
+            component: () => authLayoutType.value === 'split'
+              ? import('@/views/auth/split/Login.vue')
+              : import('@/views/auth/center/Login.vue')
+          },
+          {
+            path: 'Register',
+            name: 'Register',
+            priority: 2,
+            component: () => authLayoutType.value === 'split'
+              ? import('@/views/auth/split/Register.vue')
+              : import('@/views/auth/center/Register.vue')
+          }
+        ],
+        '/landing': [
+          {
+            path: 'Login',
+            name: 'Login',
+            priority: 1,
+            component: () => authLayoutType.value === 'split'
+              ? import('@/views/auth/split/Login.vue')
+              : import('@/views/auth/center/Login.vue')
+          },
+          {
+            path: 'Register',
+            name: 'Register',
+            priority: 2,
+            component: () => authLayoutType.value === 'split'
+              ? import('@/views/auth/split/Register.vue')
+              : import('@/views/auth/center/Register.vue')
+          }
+        ],
+        '/login': [
+          {
+            path: 'Register',
+          },
+          { path: 'Dashboard', name: 'Dashboard', priority: 3, component: () => import('@/views/dashboard/Dashboard.vue') }
+        ],
+        '/register': [
+          {
+            path: 'Login',
+            name: 'Login',
+            priority: 1,
+            component: () => authLayoutType.value === 'split'
+              ? import('@/views/auth/split/Login.vue')
+              : import('@/views/auth/center/Login.vue')
+          },
+          { path: 'Dashboard', name: 'Dashboard', priority: 3, component: () => import('@/views/dashboard/Dashboard.vue') }
+        ],
+        '/dashboard': [
           },
           {
             path: 'Register',
