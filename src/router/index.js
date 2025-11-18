@@ -1,4 +1,4 @@
-﻿
+const Dashboard = () => import('@/views/dashboard/Dashboard.vue');
 import { createRouter, createWebHashHistory } from 'vue-router';
 import { SITE_CONFIG, DEFAULT_CONFIG, isBrowserRestricted, TRAFFICLOG_CONFIG, isXiaoV2board, AUTH_LAYOUT_CONFIG } from '@/utils/baseConfig';
 import i18n from '@/i18n';
@@ -22,13 +22,9 @@ const Profile = () => import('@/views/profile/UserProfile.vue');
 const BrowserRestricted = () => import('@/views/errors/BrowserRestricted.vue');
 const NotFound = () => import('@/views/errors/NotFound.vue');
 const CustomerService = () => import('@/views/service/CustomerService.vue');
-
-const routes = [
-  {
-    path: '/',
-    redirect: DEFAULT_CONFIG.enableLandingPage ? '/landing' : '/login'
-  },
-  {
+  {
+    path: '/browser-restricted',
+
     path: '/api-validation',
     name: 'ApiValidation',
     component: ApiValidation,

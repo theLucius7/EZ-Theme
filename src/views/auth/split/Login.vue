@@ -87,9 +87,6 @@
                   <span class="checkbox-label">{{ $t('common.rememberMe') }}</span>
                 </label>
               </div>
-              <router-link to="/forgot-password" class="forgot-password">
-                {{ $t('common.forgotPassword') }}
-              </router-link>
             </div>
             
             <button
