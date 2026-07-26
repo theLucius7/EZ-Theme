@@ -6,7 +6,7 @@
 
 export const config  = {
     // 面板类型配置 - 请选择您使用的面板类型
-    PANEL_TYPE: 'Xiao-V2board', // 可选值: 'V2board', 'Xiao-V2board' 或 'Xboard'
+    PANEL_TYPE: 'Xboard', // 可选值: 'V2board', 'Xiao-V2board' 或 'Xboard'
     // 说明:
     // 1. V2board: 标准V2board面板，使用默认请求格式
     // 2. Xiao-V2board: Xiao修改版面板，使用特殊格式的请求参数
@@ -23,15 +23,13 @@ export const config  = {
         urlMode: 'static',
       
         // 是否展示后端联通性检测
-        showCheckBackend: false,
+        showCheckBackend: true,
       
         // 静态URL模式下的基础URL (urlMode = 'static'时使用)
         // 支持字符串形式(单个API地址)或数组形式(多个备选API地址)
         // 多个地址时，会按顺序检测可用性，并使用第一个可用的地址
         staticBaseUrl: [
-            'https://w5x8mu2a9943r.ezdemo.xyz/api/v1',
-            'https://skhsn6q4pnv95.ezdemo.xyz/api/v1',
-            'https://gy1v06omopzc8.ezdemo.xyz/api/v1'
+            'https://better-xboard.lucius7.dev/api/v1'
         ],
       
         // 自动获取模式配置 (urlMode = 'auto'时使用)
@@ -49,14 +47,14 @@ export const config  = {
 
     // 是否启用中间件代理API请求
     // 设置为true时，所有API请求将通过中间件转发
-    API_MIDDLEWARE_ENABLED: true,
+    API_MIDDLEWARE_ENABLED: false,
   
     //=======================================================
     // 中间件服务器URL (不含路径) 开源地址 https://github.com/codeman857/EZ-Encrypt-Middleware
-    API_MIDDLEWARE_URL: 'https://d2ijw202als7c.ezdemo.xyz',
+    API_MIDDLEWARE_URL: '',
   
     // 中间件加密KEY必须是16位的16进制字符串，必须和中间件key保持一致 在线生成地址 https://www.bejson.com/math/hex_gen/
-    API_MIDDLEWARE_KEY: '4c6f8e5f9467dc71',
+    API_MIDDLEWARE_KEY: '',
     //=======================================================
 
     // 中间件路由前缀 (与中间件服务器配置保持一致)
@@ -336,7 +334,7 @@ export const config  = {
     PROFILE_CONFIG: {
         // 是否显示礼品卡兑换栏目 (true=显示, false=隐藏)
         // 支持 Xiao-V2board 与新版 Xboard
-        showGiftCardRedeem: false,
+        showGiftCardRedeem: true,
 
         // 是否显示最近登录设备栏目 (true=显示, false=隐藏)
         showRecentDevices: true
