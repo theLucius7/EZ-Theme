@@ -1,20 +1,10 @@
 import CryptoJS from "crypto-js";
 
-const key = window.EZ_CONFIG.API_MIDDLEWARE_KEY;
-
-// 获取或生成 IV
+// 每个请求生成独立 IV，避免不同请求复用同一加密偏移量。
 export const randomIv = () => {
-  const saveIv = localStorage.getItem('temp_iv');
-  if (saveIv) {
-    return saveIv;
-  } else {
-    const b = new Uint8Array(8);
-    crypto.getRandomValues(b);
-    const hex = Array.from(b, x => x.toString(16).padStart(2, '0')).join('');
-    localStorage.setItem('temp_iv', hex);
-    
-    return hex;
-  }
+  const bytes = new Uint8Array(8);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, value => value.toString(16).padStart(2, '0')).join('');
 };
 
 // 加密方法
@@ -51,8 +41,19 @@ export function Decrypt(data, k, i) {
   }
 }
 
-export const getEncrypUrl = (url) => {
+export const getEncryptedRequestPath = (url) => {
+  const key = window.EZ_CONFIG.API_MIDDLEWARE_KEY;
   const iv = randomIv();
   const encrypted = Encrypt(url, key, iv);
-  return encrypted;
-}
+  if (!encrypted) {
+    throw new Error('API 路径加密失败');
+  }
+
+  // 外层编码使用无填充 Base64URL，确保密文始终是单一路径段。
+  const token = btoa(encrypted)
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/g, '');
+
+  return { token, iv };
+};

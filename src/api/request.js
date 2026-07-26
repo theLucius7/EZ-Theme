@@ -3,7 +3,7 @@ import axios from 'axios';
 import { API_BASE_URL, getApiBaseUrl, isXiaoV2board, isXboard, CUSTOM_HEADERS_CONFIG } from '@/utils/baseConfig';
 import { mapApiPath } from './utils/pathMapper';
 import { getAvailableApiUrl } from '@/utils/apiAvailabilityChecker';
-import { getEncrypUrl, randomIv } from "@/api/utils/encryption";
+import { getEncryptedRequestPath } from "@/api/utils/encryption";
 
 const isEncrypted = window.EZ_CONFIG &&
   window.EZ_CONFIG.API_MIDDLEWARE_ENABLED &&
@@ -15,8 +15,6 @@ const request = axios.create({
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
-    // 只有在加密模式下才添加 X-IV 头
-    ...(isEncrypted && { 'X-IV': randomIv() }),
   }
 });
 
@@ -26,10 +24,15 @@ request.interceptors.request.use(
     
     if (window.EZ_CONFIG && window.EZ_CONFIG.API_MIDDLEWARE_ENABLED) {
       const originalUrl = config.url;
-      
-      const path = originalUrl.startsWith("http") ? mapApiPath(config.url) : `${window.EZ_CONFIG.API_MIDDLEWARE_PATH}/${btoa(getEncrypUrl(config.url))}`
-      
-      config.url = isEncrypted ? path : mapApiPath(config.url);
+
+      if (isEncrypted && !originalUrl.startsWith("http")) {
+        const { token, iv } = getEncryptedRequestPath(originalUrl);
+        const prefix = window.EZ_CONFIG.API_MIDDLEWARE_PATH.replace(/\/+$/g, '');
+        config.url = `${prefix}/${token}`;
+        config.headers['X-IV'] = iv;
+      } else {
+        config.url = mapApiPath(originalUrl);
+      }
       
       if (process.env.NODE_ENV === 'development') {
         console.log(`API路径映射: ${originalUrl} -> ${config.url}`);
